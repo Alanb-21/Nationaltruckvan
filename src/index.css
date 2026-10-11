@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --canvas: 3 10 23;
+  --surface: 8 24 50;
+  --raised: 14 36 70;
+  --line: 255 255 255;
+  --ink: 242 245 250;
+  --muted: 150 164 188;
+  --faint: 98 114 142;
+  --accent: 255 205 0;
+  --accent-ink: 10 20 38;
+  --ok: 92 184 138;
+  --warn: 226 170 76;
+  --bad: 226 104 94;
+  color-scheme: dark;
+}
+
+html, body, #root { height: 100%; }
+body {
+  @apply bg-canvas text-ink font-sans antialiased;
+  font-feature-settings: 'tnum' 1, 'cv11' 1, 'ss01' 1;
+  font-variant-numeric: tabular-nums;
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+}
+button { -webkit-tap-highlight-color: transparent; }
+::selection { background: rgb(var(--accent) / 0.35); }
+
+* { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.12) transparent; }
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 8px; }
+
+@layer components {
+  /* Glass: sidebar, top bar, sheets, tour card, floating panels */
+  .glass {
+    position: relative;
+    background: linear-gradient(180deg, rgba(20, 42, 78, 0.62), rgba(9, 24, 50, 0.58));
+    -webkit-backdrop-filter: blur(24px) saturate(170%);
+    backdrop-filter: blur(24px) saturate(170%);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.09), 0 24px 60px -24px rgba(0, 0, 0, 0.7);
+  }
+  .glass-strong {
+    position: relative;
+    background: linear-gradient(180deg, rgba(22, 46, 84, 0.82), rgba(9, 24, 50, 0.8));
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    backdrop-filter: blur(30px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1), 0 30px 80px -30px rgba(0, 0, 0, 0.8);
+  }
+  /* Content cards stay solid so text is crisp */
+  .card {
+    background: rgb(var(--surface));
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.035);
+  }
+  .hairline { border-color: rgba(255, 255, 255, 0.07); }
+  .num { font-variant-numeric: tabular-nums; font-feature-settings: 'tnum' 1; }
+  .label { @apply text-2xs font-medium uppercase text-faint; letter-spacing: 0.08em; }
+  .focus-ring { @apply outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-0; }
+}
+
+/* Slow gradient glow behind the app so the glass has something to refract */
+.ambient { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.ambient::before, .ambient::after, .ambient > i {
+  content: ''; position: absolute; border-radius: 50%; filter: blur(90px);
+}
+.ambient::before {
+  width: 62vmax; height: 62vmax; left: -18vmax; top: -24vmax;
+  background: radial-gradient(circle, rgba(7, 27, 58, 1) 0%, rgba(14, 50, 104, 0.55) 45%, transparent 70%);
+  animation: drift1 38s ease-in-out infinite alternate;
+}
+.ambient::after {
+  width: 44vmax; height: 44vmax; right: -14vmax; bottom: -18vmax;
+  background: radial-gradient(circle, rgba(255, 205, 0, 0.13) 0%, rgba(255, 205, 0, 0.04) 45%, transparent 70%);
+  animation: drift2 46s ease-in-out infinite alternate;
+}
+.ambient > i {
+  width: 40vmax; height: 40vmax; right: 18vmax; top: -10vmax;
+  background: radial-gradient(circle, rgba(30, 72, 140, 0.35) 0%, transparent 65%);
+  animation: drift3 52s ease-in-out infinite alternate;
+}
+@keyframes drift1 { to { transform: translate(14vmax, 10vmax) scale(1.1); } }
+@keyframes drift2 { to { transform: translate(-12vmax, -8vmax) scale(1.15); } }
+@keyframes drift3 { to { transform: translate(-10vmax, 14vmax) scale(0.9); } }
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.6); opacity: 0.9; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+.pulse-ring { animation: pulse-ring 1.8s cubic-bezier(0.2, 0.6, 0.3, 1) infinite; transform-origin: center; transform-box: fill-box; }
+@keyframes scanline { 0% { top: 8%; } 50% { top: 88%; } 100% { top: 8%; } }
+.scanline { animation: scanline 2.2s ease-in-out infinite; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient::before, .ambient::after, .ambient > i, .pulse-ring, .scanline { animation: none !important; }
+}
