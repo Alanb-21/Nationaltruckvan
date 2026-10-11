@@ -437,7 +437,7 @@ export function VehicleArt({ type, className, title }: { type: VehicleType; clas
 export function VehicleThumb({ type, className }: { type: VehicleType; className?: string }) {
   return (
     <div className={`flex shrink-0 items-center justify-center overflow-hidden rounded-[12px] bg-gradient-to-b from-white/[0.07] to-white/[0.02] ring-1 ring-inset ring-white/[0.06] ${className ?? 'h-11 w-14'}`}>
-      <VehicleArt type={type} className="w-[115%] max-w-none translate-y-[6%]" />
+      <VehicleArt type={type} className="w-[128%] max-w-none translate-y-[4%]" />
     </div>
   )
 }

@@ -55,7 +55,7 @@ export default function VehicleDetail() {
   const swap = swaps.find((s) => s.forVehicleId === v.id)
   const coveringFor = swaps.find((s) => s.replacementId === v.id)
   const vJobs = jobs.filter((j) => j.vehicleId === v.id)
-  const allowanceUsed = v.contract ? Math.min(100, ((v.odometer % v.contract.annualAllowanceKm) / v.contract.annualAllowanceKm) * 100) : 0
+  const allowanceUsed = v.contract ? 38 + ((v.idx * 37) % 55) : 0
 
   const bookService = () => {
     const jobId = useDemo.getState().createJob({ vehicleId: v.id, title: 'Service B', kind: 'Service', source: 'Workshop', bookedFor: dayOffset(svcDay) })
@@ -136,7 +136,7 @@ export default function VehicleDetail() {
             <div className="relative mb-6 mt-8 h-14">
               <div className="absolute inset-x-0 top-6 h-px bg-white/[0.1]" />
               {[0, 90, 180, 270, 365].map((d) => (
-                <div key={d} className="absolute top-8 -translate-x-1/2 text-2xs text-faint" style={{ left: `${(d / span) * 100}%` }}>
+                <div key={d} className={cn('absolute top-8 whitespace-nowrap text-2xs text-faint', d === 0 ? '' : d === 365 ? '-translate-x-full' : '-translate-x-1/2')} style={{ left: `${(d / span) * 100}%` }}>
                   {d === 0 ? 'Today' : fmtDay(dayOffset(d))}
                 </div>
               ))}
@@ -254,7 +254,7 @@ export default function VehicleDetail() {
           </Section>
 
           <Section title="Mileage">
-            <div className="text-3xl font-semibold">{fmtNum(v.odometer)} <span className="text-base font-normal text-muted">km</span></div>
+            <div className="num text-3xl font-semibold">{fmtNum(v.odometer)} <span className="text-base font-normal text-muted">km</span></div>
             <div className="mt-1 text-sm text-muted">
               Next service at {fmtKm(v.nextService.km)} or {fmtDate(v.nextService.date)}
             </div>

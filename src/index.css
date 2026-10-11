@@ -21,8 +21,8 @@
 html, body, #root { height: 100%; }
 body {
   @apply bg-canvas text-ink font-sans antialiased;
-  font-feature-settings: 'tnum' 1, 'cv11' 1, 'ss01' 1;
-  font-variant-numeric: tabular-nums;
+  /* Tabular figures are applied through .num on every number; registrations stay proportional
+     because Inter's tabular set widens the hyphen. */
   -webkit-tap-highlight-color: transparent;
   overflow: hidden;
 }

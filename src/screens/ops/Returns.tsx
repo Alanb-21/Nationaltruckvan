@@ -183,7 +183,7 @@ function CheckIn({ r, v }: { r: ReturnCheck; v: Vehicle }) {
               <div className="mb-3 flex items-center gap-2 font-medium">
                 <Gauge className="h-4 w-4 text-muted" /> Mileage
               </div>
-              <div className="text-2xl font-semibold">{fmtKm(used)}</div>
+              <div className="num text-2xl font-semibold">{fmtKm(used)}</div>
               <div className="mb-2 text-sm text-muted">against {fmtKm(r.allowanceKm)} allowed for this hire</div>
               <div className="relative h-2 overflow-hidden rounded-full bg-white/[0.08]">
                 <div className={cn('h-full rounded-full', used > r.allowanceKm ? 'bg-warn' : 'bg-ok')} style={{ width: `${Math.min(100, (used / r.allowanceKm) * 100)}%` }} />

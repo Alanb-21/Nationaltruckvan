@@ -74,7 +74,7 @@ export default function Workshop() {
               {occupied.size}/{bays} in use
             </span>
           </div>
-          <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 lg:grid-cols-12">
+          <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
             {Array.from({ length: bays }, (_, i) => i + 1).map((b) => {
               const j = occupied.get(b)
               const v = j ? vById.get(j.vehicleId) : undefined
@@ -136,7 +136,7 @@ export default function Workshop() {
                   setDragId(null)
                   setOver(null)
                 }}
-                className={cn('flex w-[280px] shrink-0 flex-col rounded-xl bg-white/[0.025] p-2 ring-1 ring-inset transition-colors xl:w-auto xl:flex-1', over === stage ? 'ring-accent/50 bg-accent/[0.04]' : 'ring-white/[0.04]')}
+                className={cn('flex w-[280px] shrink-0 flex-col rounded-xl bg-white/[0.025] p-2 ring-1 ring-inset transition-colors xl:w-auto xl:min-w-0 xl:flex-1', over === stage ? 'ring-accent/50 bg-accent/[0.04]' : 'ring-white/[0.04]')}
                 data-tour={`col-${stage.toLowerCase().replace(/\s+/g, '-')}`}
               >
                 <div className="flex items-center gap-2 px-2 pb-2 pt-1">
@@ -180,7 +180,7 @@ export default function Workshop() {
                               <button onClick={() => navigate(`/fleet/${v.id}`)} className="block truncate text-sm font-semibold hover:text-accent">
                                 {v.reg}
                               </button>
-                              <div className="truncate text-xs text-muted">{j.title}</div>
+                              <div className="line-clamp-2 text-xs leading-4 text-muted">{j.title}</div>
                             </div>
                             <Menu.Root modal={false}>
                               <Menu.Trigger asChild>

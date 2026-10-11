@@ -35,6 +35,10 @@ export function planBookings(items: ComplianceItem[]): (PlannedBooking & { reaso
     let replacementId: string | undefined
     let reasons: string[] = []
     let km: number | undefined
+    if (it.kind === 'Tax') {
+      out.push({ itemId: it.id, vehicleId: v.id, kind: it.kind, date: dayOffset(Math.max(0, Math.min(it.days, 1))), depot: v.depot, bay: 0, reasons: [] })
+      continue
+    }
     if (v.status === 'On hire') {
       const m = matchReplacement(v, placeOf(v), vehicles, used)
       if (m) {

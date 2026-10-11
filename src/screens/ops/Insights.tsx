@@ -144,7 +144,7 @@ export default function Insights() {
             <ResponsiveContainer>
               <BarChart data={util} layout="vertical" margin={{ left: 8, right: 36, top: 0, bottom: 0 }} barCategoryGap={6}>
                 <XAxis type="number" domain={[0, 100]} hide />
-                <YAxis type="category" dataKey="name" width={84} tick={AXIS} axisLine={false} tickLine={false} />
+                <YAxis type="category" dataKey="name" width={96} tick={AXIS} axisLine={false} tickLine={false} />
                 <Tooltip cursor={{ fill: 'rgba(255,255,255,0.04)' }} content={<Tip unit="%" />} />
                 <Bar dataKey="value" radius={[0, 4, 4, 0]} fill={ACCENT} label={{ position: 'right', fill: '#96a4bc', fontSize: 12, formatter: (v: number) => `${v}%` }} />
               </BarChart>

@@ -9,3 +9,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <App />
   </React.StrictMode>,
 )
+
+if (import.meta.env.DEV) {
+  // handles for the Playwright QA scripts in qa/
+  import('./tour/tourStore').then((m) => Object.assign(window, { __tour: m.useTour }))
+  import('./store').then((m) => Object.assign(window, { __demo: m.useDemo }))
+}

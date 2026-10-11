@@ -327,6 +327,8 @@ export function buildSeed(): Seed {
   }
   // Make sure the count is exact even with tour vehicles
   vehicles.length = 1312
+  // non-breaking hyphens so a registration never wraps across two lines
+  for (const v of vehicles) v.reg = v.reg.replace(/-/g, '\u2011')
 
   for (const v of vehicles) {
     if (v.status === 'On hire' || v.status === 'Awaiting collection') {
@@ -470,8 +472,9 @@ export function buildSeed(): Seed {
       )
       const v = pool[Math.floor(rnd() * pool.length)]
       const kinds = kindsOf(v)
-      const weightedKinds = kinds.flatMap((k) => (k === 'Tax' ? [k] : k === 'CVRT' ? [k, k] : [k, k, k]))
-      const kind = pick(weightedKinds)
+      const nonTax = kinds.filter((k) => k !== 'Tax')
+      const weightedKinds = nonTax.flatMap((k) => (k === 'CVRT' ? [k, k] : [k, k, k]))
+      const kind = rnd() < 0.12 || !weightedKinds.length ? 'Tax' : pick(weightedKinds)
       const key = `${v.id}:${kind}`
       if (usedPairs.has(key)) continue
       usedPairs.add(key)
@@ -484,7 +487,7 @@ export function buildSeed(): Seed {
 
   // Pre-booked Slaney items (next 2 weeks) so the customer portal has bookings
   const bookings: Record<string, ComplianceBooking> = {}
-  const preBook = windowItems.filter((w) => w.v.customerId === TOUR.slaneyId && w.offset >= 7)
+  const preBook = windowItems.filter((w) => w.v.customerId === TOUR.slaneyId && w.offset >= 7 && w.kind !== 'Tax')
   const reservedRepl = new Set<string>([TOUR.replacementId])
   for (const w of preBook) {
     const repl = vehicles.find((x) => x.status === 'Available' && x.type === w.v.type && x.depot === 'Dublin' && !reservedRepl.has(x.id))
@@ -549,12 +552,12 @@ export function buildSeed(): Seed {
       lat: PLACES.Monasterevin.lat,
       lon: PLACES.Monasterevin.lon,
       fault: 'Air leak, brake warning light on',
-      reportedAt: at(7, 55),
+      reportedAt: at(7, 18),
       driver: 'Paddy Quinn',
-      recovery: { by: 'Kildare Commercial Recovery', eta: at(8, 45) },
+      recovery: { by: 'Kildare Commercial Recovery', eta: at(8, 5) },
       steps: [
-        { step: 'Reported', at: at(7, 55) },
-        { step: 'Recovery assigned', at: at(7, 58) },
+        { step: 'Reported', at: at(7, 18) },
+        { step: 'Recovery assigned', at: at(7, 21) },
       ],
     },
   ]
@@ -583,7 +586,7 @@ export function buildSeed(): Seed {
       id: TOUR.returnId,
       vehicleId: tourVan.id,
       customerId: 'c-midland',
-      returnedAt: at(7, 48),
+      returnedAt: at(7, 36),
       hireDays: 9,
       before: [mark('Rear bumper', 'Scratch', 'Minor')],
       after: [],
@@ -675,13 +678,10 @@ export function buildSeed(): Seed {
   ] as const
   const vorHistory: VorEpisode[] = []
   for (let w = 12; w >= 1; w--) {
-    const n = int(7, 13) - Math.floor((12 - w) / 4)
+    const n = int(9, 12) - Math.floor((12 - w) / 3)
     for (let i = 0; i < n; i++) {
       vorHistory.push({ vehicleId: pick(vehicles).id, reason: weighted(VOR_REASONS), start: dayOffset(-w * 7 + int(0, 6)), days: Math.max(1, Math.round(1 + rnd() * rnd() * 9)) })
     }
-  }
-  for (const v of vorVehicles) {
-    vorHistory.push({ vehicleId: v.id, reason: v.vor!.reason.split(',')[0], start: v.vor!.since.slice(0, 10), days: Math.max(1, Math.round((NOW.getTime() - new Date(v.vor!.since).getTime()) / 86400000)) })
   }
 
   const complianceHistory: ComplianceRecord[] = []
@@ -732,7 +732,7 @@ export function buildSeed(): Seed {
   const label = (k: ComplianceKind) => (k === '13-week' ? '13-week inspection' : k === 'Tail-lift' ? 'Tail-lift exam' : k === 'Fridge' ? 'Fridge service' : k === 'Probe' ? 'Probe calibration' : k === 'Tacho' ? 'Tacho calibration' : k === 'Tax' ? 'Motor tax' : 'CVRT')
   const ctxName = (v: Vehicle) => (v.customerId ? custById[v.customerId].name : `${v.depot} depot`)
   const feed: FeedItem[] = [
-    { id: 'f-b2', kind: 'breakdown', title: 'Breakdown on the M7 near Monasterevin', context: `${b2v.reg} curtain-sider, ${custById['c-mourne'].name}. Recovery on the way.`, time: at(7, 55), vehicleId: b2v.id, refId: 'b-2' },
+    { id: 'f-b2', kind: 'breakdown', title: 'Breakdown on the M7 near Monasterevin', context: `${b2v.reg} curtain-sider, ${custById['c-mourne'].name}. Recovery on the way.`, time: at(7, 18), vehicleId: b2v.id, refId: 'b-2' },
     { id: 'f-web1', kind: 'request', title: 'Book a Service', context: 'Ferrycarrig Foods via the website. Next Tuesday or Wednesday.', time: at(7, 31), refId: 't-3' },
     { id: 'f-ret', kind: 'return', title: 'Returned with damage', context: `${byId(returns[2].vehicleId).reg} luton back from ${custById['c-royalcanal'].name}. Dent noted at drop-off.`, time: at(7, 20), vehicleId: returns[2].vehicleId, refId: returns[2].id },
     ...overdue.map((w, i) => ({
@@ -782,8 +782,8 @@ export function buildSeed(): Seed {
     {
       id: 't-7', kind: 'Driver', tag: 'Breakdown', name: 'Paddy Quinn', customerId: 'c-mourne', vehicleId: b2v.id, unread: false,
       messages: [
-        { id: 'm1', from: 'them', at: at(7, 55), text: 'Pulled in on the hard shoulder past Monasterevin. Air warning light on and the brakes feel off.' },
-        { id: 'm2', from: 'us', at: at(7, 58), text: 'Stay with the truck and keep the hazards on. Kildare Commercial Recovery are on the way, ETA 08:45.' },
+        { id: 'm1', from: 'them', at: at(7, 18), text: 'Pulled in on the hard shoulder past Monasterevin. Air warning light on and the brakes feel off.' },
+        { id: 'm2', from: 'us', at: at(7, 21), text: 'Stay with the truck and keep the hazards on. Kildare Commercial Recovery are on the way, ETA 08:05.' },
       ],
     },
     {
@@ -814,7 +814,7 @@ export function buildSeed(): Seed {
       customerId: TOUR.slaneyId,
       kind: 'booking' as const,
       title: `${label(w.kind)} booked for ${w.v.reg}`,
-      body: `Ballycoolin, ${dayOffset(w.offset - 1)}. Replacement allocated.`,
+      body: `Ballycoolin, ${new Intl.DateTimeFormat('en-IE', { weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(dayOffset(w.offset - 1) + 'T12:00:00'))}. Replacement allocated.`,
       at: at(11, 20 + i, -2),
       vehicleId: w.v.id,
     })),

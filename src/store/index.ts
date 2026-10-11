@@ -21,7 +21,7 @@ import type {
   VehicleStatus,
 } from '@/data/types'
 import { DEPOTS, PLACES, damageCharge, EXCESS_KM_RATE, FUEL_RATE_PER_LITRE, REFUEL_SERVICE, TANK_LITRES, COMPLIANCE_LABEL, isFridge } from '@/data/catalog'
-import { NOW, TODAY_KEY, dayOffset, minutesFromNow, daysUntil, fmtTime } from '@/lib/time'
+import { NOW, TODAY_KEY, dayOffset, minutesFromNow, daysUntil, fmtTime, fmtDayLong as fmtDayName } from '@/lib/time'
 import { distanceKm } from '@/lib/format'
 
 // Base seed is rebuilt on every load (deterministic) and never persisted.
@@ -130,7 +130,7 @@ export const useDemo = create<DemoState & Actions>()(
         return `${p}-${n}-${Date.now().toString(36).slice(-4)}`
       }
       const notify = (n: Omit<CustomerNotice, 'id' | 'at'>) => {
-        set((s) => ({ notices: [{ ...n, id: id('n'), at: new Date(Math.max(Date.now(), NOW.getTime())).toISOString(), isNew: true }, ...s.notices] }))
+        set((s) => ({ notices: [{ ...n, id: id('n'), at: nowIso(), isNew: true }, ...s.notices] }))
       }
       return {
         ...initialState(),
@@ -270,7 +270,8 @@ export const useDemo = create<DemoState & Actions>()(
             if (s.bookings[p.itemId]) continue
             const v = merged(s.vehiclePatches, p.vehicleId)
             const title = COMPLIANCE_LABEL[p.kind].replace('Temperature probe calibration', 'Probe calibration')
-            const jobId = get().createJob({ vehicleId: p.vehicleId, title, kind: 'Compliance', source: 'Compliance', depot: p.depot, bookedFor: p.date })
+            // motor tax is renewed by the office, no bay or replacement needed
+            const jobId = p.kind === 'Tax' ? '' : get().createJob({ vehicleId: p.vehicleId, title, kind: 'Compliance', source: 'Compliance', depot: p.depot, bookedFor: p.date })
             set((st) => ({
               jobs: st.jobs.map((j) => (j.id === jobId ? { ...j, bay: p.bay, replacementId: p.replacementId } : j)),
               bookings: { ...st.bookings, [p.itemId]: { itemId: p.itemId, date: p.date, depot: p.depot, bay: p.bay, replacementId: p.replacementId, jobId } },
@@ -283,7 +284,7 @@ export const useDemo = create<DemoState & Actions>()(
                 customerId: v.customerId,
                 kind: 'booking',
                 title: `${title} booked for ${v.reg}`,
-                body: `${DEPOTS[p.depot].site}, ${p.date}.${r ? ` ${r.reg} allocated as the replacement.` : ''}`,
+                body: p.kind === 'Tax' ? `Renewal filed for ${p.date}. No downtime.` : `${DEPOTS[p.depot].site}, ${fmtDayName(p.date)}.${r ? ` ${r.reg} allocated as the replacement.` : ''}`,
                 vehicleId: v.id,
               })
             }
@@ -409,7 +410,7 @@ export const useDemo = create<DemoState & Actions>()(
     },
     {
       name: 'ntvr-fleet-command',
-      version: 3,
+      version: 4,
       storage: createJSONStorage(() => localStorage),
       merge: (persisted, current) => {
         const p = persisted as Partial<DemoState> | undefined

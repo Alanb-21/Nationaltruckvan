@@ -118,7 +118,8 @@ export const STEPS: TourStep[] = [
       if (tourJob()) return
       await c.wait(2200)
       await c.tap('[data-tour="feed-first-action"]')
-      await c.wait(900)
+      await c.focus('[data-tour="stats"]')
+      await c.wait(600)
     },
     ensure: ensureJob,
   },
@@ -153,7 +154,7 @@ export const STEPS: TourStep[] = [
     target: '[data-tour="bucket-this-week"]',
     run: async (c) => {
       if (!weekItems().length) {
-        await c.focus('[data-tour="booked"]')
+        await c.focus('[data-tour="radar-counts"]')
         return
       }
       await c.wait(2000)
@@ -165,7 +166,7 @@ export const STEPS: TourStep[] = [
       await c.wait(3200)
       await c.tap('[data-tour="confirm-booking"]')
       await c.wait(700)
-      await c.focus('[data-tour="booked"]')
+      await c.focus('[data-tour="radar-counts"]')
     },
     ensure: ensureBooked,
   },

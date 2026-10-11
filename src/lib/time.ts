@@ -1,6 +1,6 @@
-// Demo clock: today's date, frozen at 08:10 Dublin time so the morning story always lines up.
+// Demo clock: today's date, starting at 07:44 local time so the morning story always lines up.
 const base = new Date()
-base.setHours(8, 10, 0, 0)
+base.setHours(7, 44, 0, 0)
 export const NOW = base
 export const TODAY_KEY = isoDate(base)
 

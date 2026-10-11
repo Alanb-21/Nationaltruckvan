@@ -29,7 +29,7 @@ export default function Fleet() {
   const customer = params.get('customer') ?? ''
 
   const base = useMemo(
-    () => vehicles.filter((v) => (depot === 'All' || v.depot === depot) && (type === 'All' || v.type === type) && (!customer || v.customerId === customer) && (!q || v.reg.toLowerCase().replace(/-/g, '').includes(q.toLowerCase().replace(/-/g, '')))),
+    () => vehicles.filter((v) => (depot === 'All' || v.depot === depot) && (type === 'All' || v.type === type) && (!customer || v.customerId === customer) && (!q || v.reg.toLowerCase().replace(/[-\u2011]/g, '').includes(q.toLowerCase().replace(/[-\u2011]/g, '')))),
     [vehicles, depot, type, customer, q],
   )
   const list = useMemo(() => (status === 'All' ? base : base.filter((v) => v.status === status)), [base, status])
@@ -164,7 +164,7 @@ export default function Fleet() {
                   </div>
                   <div className="flex shrink-0 flex-col items-end gap-1">
                     <StatusPill status={v.status} />
-                    <span className={cn('num text-xs', d < 0 ? 'text-bad' : d <= 7 ? 'text-warn' : 'text-faint')}>
+                    <span className={cn('text-xs', d < 0 ? 'text-bad' : d <= 7 ? 'text-warn' : 'text-faint')}>
                       {nd[0] === 'Probe' ? 'Probe cal' : nd[0]} {relDays(nd[1]).toLowerCase()}
                     </span>
                   </div>

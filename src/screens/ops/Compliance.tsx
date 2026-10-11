@@ -184,7 +184,7 @@ export default function Compliance() {
                             {COMPLIANCE_LABEL[i.kind]} <span className="text-muted">· {i.vehicle.reg}</span>
                           </div>
                           <div className="truncate text-sm text-muted">
-                            {fmtDayLong(i.booked!.date)}, {DEPOTS[i.booked!.depot].site}
+                            {i.kind === 'Tax' ? `Renewal filed for ${fmtDayLong(i.booked!.date)}` : `${fmtDayLong(i.booked!.date)}, ${DEPOTS[i.booked!.depot].site}`}
                             {r ? ` · replacement ${r.reg}` : ''}
                           </div>
                         </div>
@@ -238,12 +238,12 @@ export default function Compliance() {
           {(['Dublin', 'Cork'] as const).map((d) => (
             <div key={d} className="rounded-xl bg-white/[0.04] p-3">
               <div className="text-xs text-muted">{DEPOTS[d].site}</div>
-              <div className="text-xl font-semibold">{plan.filter((p) => p.depot === d).length} slots</div>
+              <div className="num text-xl font-semibold">{plan.filter((p) => p.depot === d && p.kind !== 'Tax').length} slots</div>
             </div>
           ))}
           <div className="rounded-xl bg-white/[0.04] p-3">
             <div className="text-xs text-muted">Replacements</div>
-            <div className="text-xl font-semibold">{plan.filter((p) => p.replacementId).length} matched</div>
+            <div className="num text-xl font-semibold">{plan.filter((p) => p.replacementId).length} matched</div>
           </div>
         </div>
         <div className="overflow-hidden rounded-xl ring-1 ring-inset ring-white/[0.06]" data-tour="plan-list">
@@ -258,9 +258,7 @@ export default function Compliance() {
                 </div>
                 <div className="text-sm">
                   {fmtDayLong(p.date)}
-                  <div className="text-xs text-muted">
-                    {DEPOTS[p.depot].site}, bay {p.bay}
-                  </div>
+                  <div className="text-xs text-muted">{p.kind === 'Tax' ? 'Renewed online' : `${DEPOTS[p.depot].site}, bay ${p.bay}`}</div>
                 </div>
                 <div className="flex min-w-0 items-center gap-2 text-sm">
                   {r ? (
@@ -272,7 +270,7 @@ export default function Compliance() {
                       </div>
                     </>
                   ) : (
-                    <span className="text-xs text-faint">{v.status === 'On hire' ? 'No match free' : 'Not on hire, no cover needed'}</span>
+                    <span className="text-xs text-faint">{p.kind === 'Tax' ? 'No downtime' : v.status === 'On hire' ? 'No match free' : 'Not on hire, no cover needed'}</span>
                   )}
                 </div>
               </motion.div>

@@ -14,7 +14,7 @@ const PAD = 10
 
 function rectOf(sel: string | null): Rect | null {
   if (!sel) return null
-  const el = document.querySelector(sel)
+  const el = Array.from(document.querySelectorAll(sel)).find((x) => x.getClientRects().length > 0)
   if (!el) return null
   const r = el.getBoundingClientRect()
   if (r.width === 0 && r.height === 0) return null
@@ -75,8 +75,9 @@ export function TourHost() {
       const end = Date.now() + timeout
       while (Date.now() < end) {
         if (cancelled()) throw new Error('cancelled')
-        const el = document.querySelector(sel)
-        if (el && (el as HTMLElement).offsetParent !== null) return el
+        // several copies can exist (mobile and desktop layouts): take the first visible one
+        const el = Array.from(document.querySelectorAll(sel)).find((x) => x.getClientRects().length > 0)
+        if (el) return el
         await sleep(60)
       }
       return null
@@ -120,6 +121,7 @@ export function TourHost() {
     const st = STEPS[step]
     setFocusSel(null)
     useTour.getState().setFinger(null)
+    useTour.getState().setBusy(true)
     navigate(st.route)
     ;(async () => {
       try {
@@ -127,12 +129,9 @@ export function TourHost() {
           await ctx.wait(350)
           await ctx.focus(st.target)
         }
-        if (st.run) {
-          useTour.getState().setBusy(true)
-          await st.run(ctx)
-        }
-      } catch {
-        /* cancelled */
+        if (st.run) await st.run(ctx)
+      } catch (e) {
+        if (import.meta.env.DEV && (e as Error).message !== 'cancelled') console.warn('tour step failed', e)
       } finally {
         if (runId.current === id) {
           useTour.getState().setBusy(false)
@@ -191,12 +190,12 @@ export function TourHost() {
     } else if (vw - (rect.x + rect.w) > cardW + 32) {
       cx = rect.x + rect.w + 16
       cy = Math.min(Math.max(16, rect.y), vh - cardH - 16)
-    } else if (rect.x > cardW + 32) {
-      cx = rect.x - cardW - 16
-      cy = Math.min(Math.max(16, rect.y), vh - cardH - 16)
     } else if (vh - (rect.y + rect.h) > cardH + 32) {
       cy = rect.y + rect.h + 16
       cx = Math.min(Math.max(16, rect.x + rect.w / 2 - cardW / 2), vw - cardW - 16)
+    } else if (rect.x > cardW + 32) {
+      cx = rect.x - cardW - 16
+      cy = Math.min(Math.max(16, rect.y), vh - cardH - 16)
     } else if (rect.y > cardH + 32) {
       cy = rect.y - cardH - 16
       cx = Math.min(Math.max(16, rect.x + rect.w / 2 - cardW / 2), vw - cardW - 16)

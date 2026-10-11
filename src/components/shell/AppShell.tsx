@@ -120,7 +120,7 @@ function SearchDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (o:
     const t = q.trim().toLowerCase().replace(/\s+/g, '')
     if (!t) return { vehicles: [], customers: [], jobs: [] }
     return {
-      vehicles: vehicles.filter((v) => v.reg.toLowerCase().replace(/-/g, '').includes(t.replace(/-/g, '')) || v.reg.toLowerCase().includes(t)).slice(0, 6),
+      vehicles: vehicles.filter((v) => v.reg.toLowerCase().replace(/[-\u2011]/g, '').includes(t.replace(/[-\u2011]/g, ''))).slice(0, 6),
       customers: seed.customers.filter((c) => c.name.toLowerCase().replace(/\s+/g, '').includes(t)).slice(0, 4),
       jobs: jobs.filter((j) => j.id.toLowerCase().includes(t) || j.title.toLowerCase().replace(/\s+/g, '').includes(t)).slice(0, 4),
     }

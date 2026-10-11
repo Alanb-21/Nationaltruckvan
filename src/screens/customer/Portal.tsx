@@ -202,10 +202,12 @@ function BookingsView() {
                 </div>
                 <div className="text-sm">
                   {fmtDayLong(i.booked!.date)}
-                  <div className="text-muted">{DEPOTS[i.booked!.depot].site}</div>
+                  <div className="text-muted">{i.kind === 'Tax' ? 'Renewed by National' : DEPOTS[i.booked!.depot].site}</div>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
-                  {r ? (
+                  {i.kind === 'Tax' ? (
+                    <span className="text-muted">No downtime</span>
+                  ) : r ? (
                     <>
                       <Repeat className="h-4 w-4 text-ok" />
                       <span>
