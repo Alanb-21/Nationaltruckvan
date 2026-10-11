@@ -107,7 +107,7 @@ export default function Today() {
         <StatTile label="Workshop load" value={stats.load} format={(n) => `${Math.round(n)}%`} sub={`${stats.occupied.Dublin + stats.occupied.Cork} of 20 bays in use`} />
       </div>
 
-      <div className="mt-8 grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
         <section>
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-semibold">Needs you</h2>

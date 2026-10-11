@@ -130,7 +130,7 @@ export default function VehicleDetail() {
         </div>
       </div>
 
-      <div className="mx-auto grid max-w-[1280px] gap-4 px-4 md:px-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+      <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-4 px-4 md:px-8 lg:grid-cols-[minmax(0,1fr)_360px]">
         <div className="space-y-4">
           <Section title="Compliance">
             <div className="relative mb-6 mt-8 h-14">

@@ -68,7 +68,7 @@ export default function Fleet() {
         }
       />
 
-      <div className="mb-3 flex flex-wrap items-center gap-2">
+      <div className="mb-3 flex shrink-0 flex-wrap items-center gap-2">
         <Segmented layoutId="fleet-depot" size="sm" value={depot} onChange={setDepot} options={[{ value: 'All', label: 'Both depots' }, { value: 'Dublin', label: 'Dublin' }, { value: 'Cork', label: 'Cork' }]} />
         <Menu.Root modal={false}>
           <Menu.Trigger asChild>
@@ -99,7 +99,7 @@ export default function Fleet() {
           </button>
         )}
       </div>
-      <div className="-mx-4 mb-2 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:px-0">
+      <div className="-mx-4 mb-2 flex shrink-0 gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:px-0">
         <Chip active={type === 'All'} onClick={() => setType('All')}>
           All types
         </Chip>
@@ -109,7 +109,7 @@ export default function Fleet() {
           </Chip>
         ))}
       </div>
-      <div className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:px-0">
+      <div className="-mx-4 mb-4 flex shrink-0 gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:px-0">
         <Chip active={status === 'All'} onClick={() => setStatus('All')} count={base.length}>
           All
         </Chip>

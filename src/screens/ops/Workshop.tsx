@@ -66,7 +66,7 @@ export default function Workshop() {
         right={<Segmented layoutId="ws-depot" value={depot} onChange={setDepot} options={[{ value: 'Dublin', label: 'Dublin' }, { value: 'Cork', label: 'Cork' }]} data-tour="depot-toggle" />}
       />
 
-      <div className="mb-6 grid gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
+      <div className="mb-6 grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
         <div className="card rounded-xl p-4" data-tour="bays">
           <div className="mb-3 flex items-center justify-between text-sm">
             <span className="font-medium">Bays</span>

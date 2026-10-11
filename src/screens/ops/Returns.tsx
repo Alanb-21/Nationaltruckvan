@@ -132,7 +132,7 @@ function CheckIn({ r, v }: { r: ReturnCheck; v: Vehicle }) {
         sub={`${v.make} ${v.model}, back from ${cust.name} after ${r.hireDays} days. Returned ${fmtWhen(r.returnedAt)}.`}
         right={<Segmented layoutId="ret-side" value={side} onChange={setSide} options={[{ value: 'Nearside', label: 'Nearside' }, { value: 'Offside', label: 'Offside' }]} />}
       />
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
         <div className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2" data-tour="diagrams">
             <Diagram v={v} marks={r.before} side={side} label="At check-out" />

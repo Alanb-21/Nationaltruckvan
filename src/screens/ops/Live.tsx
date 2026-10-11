@@ -106,7 +106,7 @@ export default function Live() {
   return (
     <div className="mx-auto max-w-[1440px] px-4 py-6 md:px-8 md:py-8">
       <PageHeader title="Live" sub={`${live.length} breakdowns in progress and ${vor.length} vehicles off road. ${swaps.length} replacements out covering.`} />
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_420px]">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_420px]">
         <div className="card relative overflow-hidden rounded-xl" data-tour="map">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,rgba(30,72,140,0.25),transparent_70%)]" />
           <IrelandMap pins={pins} className="relative mx-auto h-[420px] w-full md:h-[640px]" />

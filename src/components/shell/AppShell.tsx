@@ -68,7 +68,7 @@ export function LensSwitcher({ className }: { className?: string }) {
       value={lens}
       onChange={(v) => navigate(v === 'ops' ? '/today' : v === 'driver' ? '/driver' : '/portal')}
       options={[
-        { value: 'ops', label: 'Operations', tour: 'lens-ops' },
+        { value: 'ops', label: <><span className="md:hidden">Ops</span><span className="hidden md:inline">Operations</span></>, tour: 'lens-ops' },
         { value: 'driver', label: 'Driver', tour: 'lens-driver' },
         { value: 'customer', label: 'Customer', tour: 'lens-customer' },
       ]}
@@ -252,7 +252,7 @@ function TopBar({ onSearch }: { onSearch: () => void }) {
       <div className="lg:hidden">
         <Logo compact className="h-8 w-8" />
       </div>
-      <LensSwitcher className="max-md:[&_button]:px-2.5 max-md:[&_button]:text-xs" />
+      <LensSwitcher className="max-md:[&_button]:px-2.5 max-md:[&_button]:text-[13px]" />
       <div className="ml-auto flex items-center gap-1 md:gap-2">
         {lens === 'ops' && (
           <button onClick={onSearch} className="focus-ring hidden h-9 items-center gap-2 rounded-[12px] bg-white/[0.06] pl-3 pr-2 text-sm text-muted ring-1 ring-inset ring-white/[0.06] hover:text-ink md:flex" data-tour="search">

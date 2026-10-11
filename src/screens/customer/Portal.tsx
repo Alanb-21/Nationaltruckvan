@@ -27,7 +27,7 @@ function usePortalData() {
 }
 
 function friendlyStatus(v: Vehicle, covered: boolean): { label: string; tone: Tone } {
-  if (v.status === 'VOR') return { label: covered ? 'Off road, replacement with you' : 'Off road', tone: covered ? 'warn' : 'bad' }
+  if (v.status === 'VOR') return { label: covered ? 'Off road, covered' : 'Off road', tone: covered ? 'warn' : 'bad' }
   if (v.status === 'In workshop') return { label: 'In workshop', tone: 'warn' }
   return { label: 'Working', tone: 'ok' }
 }
@@ -45,8 +45,8 @@ function PortalNav() {
         <div className="hidden shrink-0 items-center gap-3 border-r border-white/[0.08] pr-4 md:flex">
           <Logo className="h-7" />
         </div>
-        <span className="shrink-0 text-sm font-semibold md:text-base">Slaney Pharma Logistics</span>
-        <nav className="ml-auto flex shrink-0 gap-1">
+        <span className="hidden shrink-0 text-sm font-semibold sm:inline md:text-base">Slaney Pharma Logistics</span>
+        <nav className="flex shrink-0 gap-1 sm:ml-auto">
           {items.map((i) => (
             <NavLink key={i.to} to={i.to} end={i.end} data-tour={`portal-${i.label.toLowerCase()}`} className={({ isActive }) => cn('rounded-[10px] px-3 py-1.5 text-sm font-medium transition-colors', isActive ? 'bg-white/[0.1] text-ink' : 'text-muted hover:text-ink')}>
               {i.label}
@@ -122,7 +122,7 @@ function FleetView() {
           </div>
         ))}
       </div>
-      <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_400px]">
+      <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_400px]">
         <section className="card overflow-hidden rounded-xl">
           <div className="px-5 pb-2 pt-4 text-lg font-semibold">Your vehicles</div>
           <div className="max-h-[620px] overflow-y-auto">
@@ -133,7 +133,7 @@ function FleetView() {
                 <div key={v.id} className="flex items-center gap-3.5 border-t border-white/[0.05] px-5 py-3">
                   <VehicleThumb type={v.type} />
                   <div className="min-w-0 flex-1">
-                    <div className="font-medium">{v.reg}</div>
+                    <div className="truncate font-medium">{v.reg}</div>
                     <div className="truncate text-sm text-muted">
                       {TYPE_LABEL[v.type]} · {v.site}
                     </div>
@@ -276,8 +276,8 @@ function RequestsView() {
     setTimeout(() => setSent(false), 2200)
   }
   return (
-    <div className="mx-auto grid max-w-[1100px] gap-6 px-4 py-6 md:px-8 lg:grid-cols-[minmax(0,1fr)_380px]">
-      <div>
+    <div className="mx-auto grid max-w-[1100px] grid-cols-1 gap-6 px-4 py-6 md:px-8 lg:grid-cols-[minmax(0,1fr)_380px]">
+      <div className="min-w-0">
         <h1 className="text-3xl font-semibold">Requests</h1>
         <p className="mt-1.5 text-muted">The same options as the website form. It lands with the National team straight away.</p>
         <div className="card mt-6 space-y-5 rounded-xl p-5" data-tour="portal-form">
@@ -428,7 +428,7 @@ function DocumentsView() {
           <Download className="h-4 w-4" /> Download compliance pack
         </Button>
       </div>
-      <div className="mt-6 grid gap-4 md:grid-cols-[300px_minmax(0,1fr)]">
+      <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-[300px_minmax(0,1fr)]">
         <div className="card max-h-[560px] overflow-y-auto rounded-xl p-1.5">
           {contract.map((x) => (
             <button key={x.id} onClick={() => setSel(x.id)} className={cn('flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left', x.id === v?.id ? 'bg-white/[0.08]' : 'hover:bg-white/[0.04]')}>
