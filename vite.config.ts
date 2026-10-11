@@ -6,4 +6,5 @@ export default defineConfig({
   plugins: [react()],
   resolve: { alias: { '@': path.resolve(__dirname, 'src') } },
   server: { port: 5173, strictPort: true, host: true },
+  build: { chunkSizeWarningLimit: 1000 },
 })
