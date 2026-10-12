@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect } from 'react'
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, HashRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
+
 import { MotionConfig } from 'framer-motion'
 import { AppShell } from '@/components/shell/AppShell'
 import { Toaster } from '@/components/ui'
@@ -17,6 +18,9 @@ import { Welcome } from '@/tour/Welcome'
 import { TourHost } from '@/tour/TourHost'
 import { useDemo } from '@/store'
 import { useTour } from '@/tour/tourStore'
+
+// The hosted build (claude.ai page) has no server-side routing, so it uses hash URLs.
+const Router = import.meta.env.VITE_HASH_ROUTER ? HashRouter : BrowserRouter
 
 const Insights = lazy(() => import('@/screens/ops/Insights'))
 const ArtGallery = lazy(() => import('@/screens/qa/ArtGallery'))
@@ -41,7 +45,7 @@ function FirstLoad() {
 export default function App() {
   return (
     <MotionConfig reducedMotion="user">
-      <BrowserRouter>
+      <Router>
         <div className="ambient">
           <i />
         </div>
@@ -79,7 +83,7 @@ export default function App() {
         <Welcome />
         <TourHost />
         <Toaster />
-      </BrowserRouter>
+      </Router>
     </MotionConfig>
   )
 }
