@@ -18,4 +18,4 @@ One line each, for anything the brief left open.
 - Registrations use non-breaking hyphens so they never wrap across lines. Search accepts normal hyphens.
 - Tabular figures go on every number through the `.num` class. Registrations are left proportional because Inter's tabular set makes hyphens noticeably wider.
 - The nearside diagram shows the vehicle facing left, because the nearside is the left side in Ireland.
-- Nothing was pushed or deployed during the build. Commits were made locally after each phase.
+- Commits were made locally after each phase. The branch was pushed to GitHub only when you asked. A private claude.ai page hosts the hash-router build (`VITE_HASH_ROUTER=1 npx vite build --base ./ --outDir dist-artifact`) so it can be viewed without running anything.
